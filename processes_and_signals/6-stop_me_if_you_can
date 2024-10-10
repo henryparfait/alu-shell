@@ -7,7 +7,8 @@ pid=$(pgrep -f "4-to_infinity_and_beyond")
 # Check if the PID was found
 if [[ -n "$pid" ]]; then
     # Stop the process by sending SIGSTOP via /proc
-    kill -STOP "$pid"
+    echo "Stopping process with PID: $pid"
+    echo -n "T" > /proc/"$pid"/status
     echo "Process with PID: $pid has been stopped."
 else
     echo "Process '4-to_infinity_and_beyond' not found."
