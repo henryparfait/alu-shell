@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2009
+# The script displaying the PID nad process name of processes containing 'bash'
 
-# Iterate through all process directories in /proc
-for pid in /proc/[0-9]*; do
-    # Check if the directory exists
-    if [[ -d "$pid" ]]; then
-        # Read the process name from the cmdline file
-        cmdline=$(tr '\0' ' ' < "$pid/cmdline")
-        
-        # Check if the command line contains "bash"
-        if [[ "$cmdline" == *bash* ]]; then
-            # Output the PID and process name
-            echo "PID: ${pid##*/}, Process Name: ${cmdline%% *}"  # Only show the command without args
-        fi
-    fi
+for pid in $(pgrep -f bash); do
+    echo "$pid $(ps -p $pid -o comm=)"
 done
