@@ -3,40 +3,33 @@
 pid_file="/var/run/my_process.pid"
 process_script="./manage_my_process"
 
-start_process() {
-    if [ -f "$pid_file" ]; then
-        echo "manage_my_process is already running"
-    else
-        $process_script &
-        echo $! > "$pid_file"
-        echo "manage_my_process started"
-    fi
-}
-
-stop_process() {
-    if [ -f "$pid_file" ]; then
-        kill "$(cat "$pid_file")"
-        rm -f "$pid_file"
-        echo "manage_my_process stopped"
-    else
-        echo "manage_my_process is not running"
-    fi
-}
-
-restart_process() {
-    stop_process
-    start_process
-}
-
 case "$1" in
     start)
-        start_process
+        if [ -f "$pid_file" ]; then
+            echo "manage_my_process is already running"
+        else
+            $process_script &
+            echo $! > "$pid_file"
+            echo "manage_my_process started"
+        fi
         ;;
     stop)
-        stop_process
+        if [ -f "$pid_file" ]; then
+            kill "$(cat "$pid_file")"
+            rm -f "$pid_file"
+            echo "manage_my_process stopped"
+        else
+            echo "manage_my_process is not running"
+        fi
         ;;
     restart)
-        restart_process
+        if [ -f "$pid_file" ]; then
+            kill "$(cat "$pid_file")"
+            rm -f "$pid_file"
+        fi
+        $process_script &
+        echo $! > "$pid_file"
+        echo "manage_my_process restarted"
         ;;
     *)
         echo "Usage: manage_my_process {start|stop|restart}"
