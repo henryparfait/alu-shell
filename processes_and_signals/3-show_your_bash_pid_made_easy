@@ -2,5 +2,5 @@
 # The script displaying the PID nad process name of processes containing 'bash'
 
 for pid in $(pgrep -f bash); do
-    echo "$pid $(ps -p $pid -o comm=)"
+    echo "$pid $(ps -p "$pid" -o comm=)"
 done
