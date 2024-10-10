@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 # Indefinitely write "I am alive!" to /tmp/my_process
 while true; do
-    echo "I am alive!" >> /tmp/my_process
-    sleep 2
-done
+  if ! echo "I am alive!" >> /tmp/my_process; then
+    echo "Error writing to file /tmp/my_process" >&2
+    exit 1
+  fi
 
+  if ! sleep 2; then
+    echo "Error during sleep command" >&2
+    exit 1
+  fi
+done
