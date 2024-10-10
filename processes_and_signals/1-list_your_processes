@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Script to display currently running processes in a user-oriented format
+# including the process hierarchy
+ps -ef --forest
