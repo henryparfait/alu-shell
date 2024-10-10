@@ -15,7 +15,7 @@ case "$1" in
         ;;
     stop)
         if [ -f "$pid_file" ]; then
-            kill "$(cat "$pid_file")"
+            kill -9  "$(cat "$pid_file")"
             rm -f "$pid_file"
             echo "manage_my_process stopped"
         else
@@ -24,7 +24,7 @@ case "$1" in
         ;;
     restart)
         if [ -f "$pid_file" ]; then
-            kill "$(cat "$pid_file")"
+            kill -9 "$(cat "$pid_file")"
             rm -f "$pid_file"
         fi
         $process_script &
