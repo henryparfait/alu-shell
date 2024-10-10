@@ -1,3 +1,18 @@
 #!/usr/bin/env bash
-# The script to kill '7-highlander'
-pkill -f 7-highlander
+# 8-beheaded_process script
+
+# Find the PID of the 7-highlander process
+PID=$(pgrep -f 7-highlander)
+
+if [ -n "$PID" ]; then
+    echo "Found process with PID: $PID"
+    # Forcefully kill the process
+    kill -9 "$PID"
+    if kill -9 "$PID"; then
+        echo "Successfully sent SIGKILL signal to PID: $PID"
+    else
+        echo "Failed to send SIGKILL signal to PID: $PID"
+    fi
+else
+    echo "Process not found."
+fi
