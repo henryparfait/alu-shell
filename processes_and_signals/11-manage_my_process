@@ -1,35 +1,56 @@
 #!/usr/bin/env bash
-# The script that manages 'manage_my_process' script
+# File to write messages
+output_file="/tmp/my_process"
+
+# Infinite loop to write "I am alive!" every 2 seconds
+while true; do
+    echo "I am alive!" >> "$output_file"
+    sleep 2
+done
+
 pid_file="/var/run/my_process.pid"
-process_script="./manage_my_process"
+script_path="/path/to/manage_my_process"
+
+start() {
+    if [ -f "$pid_file" ]; then
+        echo "Process is already running."
+        exit 1
+    fi
+
+    echo "Starting manage_my_process..."
+    nohup "$script_path" &> /dev/null &
+    echo $! > "$pid_file"
+    echo "manage_my_process started"
+}
+
+stop() {
+    if [ ! -f "$pid_file" ]; then
+        echo "Process is not running."
+        exit 1
+    fi
+
+    pid=$(cat "$pid_file")
+    echo "Stopping manage_my_process (PID: $pid)..."
+    kill "$pid"
+    rm -f "$pid_file"
+    echo "manage_my_process stopped"
+}
+
+restart() {
+    stop
+    start
+    echo "manage_my_process restarted"
+}
 
 case "$1" in
     start)
-        if [ -f "$pid_file" ]; then
-            echo "manage_my_process is already running"
-        else
-            $process_script &
-            echo $! > "$pid_file"
-            echo "manage_my_process started"
-        fi
+        start
         ;;
     stop)
-        if [ -f "$pid_file" ]; then
-            kill -9  "$(cat "$pid_file")"
-            rm -f "$pid_file"
-            echo "manage_my_process stopped"
-        else
-            echo "manage_my_process is not running"
-        fi
+        stop
         ;;
     restart)
-        if [ -f "$pid_file" ]; then
-            kill -9 "$(cat "$pid_file")"
-            rm -f "$pid_file"
-        fi
-        $process_script &
-        echo $! > "$pid_file"
-        echo "manage_my_process restarted"
+        restart
         ;;
     *)
         echo "Usage: manage_my_process {start|stop|restart}"
