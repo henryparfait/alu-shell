@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-# Script to display currently running processes in a user-oriented format
+# Script to display currently running processes in a user-oriented format,
 # including the process hierarchy
-ps -e -o user,pid,ppid,%cpu,%mem,tty,stat,start,time,cmd --forest --sort=user
+ps auxf --forest
